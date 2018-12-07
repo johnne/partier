@@ -124,7 +124,7 @@ ui <- fluidPage(
                    verbatimTextOutput("L"),
                    tags$h5("Moderaterna"),
                    verbatimTextOutput("M"),
-                   tags$h5("Miljöpartier"),
+                   tags$h5("Miljöpartiet"),
                    verbatimTextOutput("Mp"),
                    tags$h5("Socialdemokraterna"),
                    verbatimTextOutput("S"),
@@ -193,7 +193,14 @@ server <- function(input, output, session) {
          colnames(sel) <- parties
        }
        sel[sel==0] <- 1
-       unsel <- n[,!colnames(n)%in%parties]
+       if (length(parties)==7) {
+         unsel <- as.data.frame(n[,!colnames(n)%in%parties], row.names=rownames(n))
+         colnames(unsel) <- colnames(n)[!colnames(n)%in%parties]
+       }
+       else {
+         unsel <- n[,!colnames(n)%in%parties]
+       }
+       
        n <- cbind(sel,unsel)[,cols]
      }
     return(n)
